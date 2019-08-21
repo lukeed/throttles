@@ -1,9 +1,13 @@
-/* eslint-disable no-console */
+const { join } = require('path');
 const { promisify } = require('util');
 const { execFile } = require('child_process');
+const { readFile, writeFile } = require('fs');
 const premove = require('premove');
 
 const run = promisify(execFile);
+const write = promisify(writeFile);
+const read = promisify(readFile);
+
 const bundt = require.resolve('bundt');
 
 function capitalize(str) {
@@ -38,6 +42,18 @@ async function mode(name, toMove) {
 	// Build modes (order matters)
 	await mode('priority', true);
 	await mode('single');
+
+	// Copy types over for "priority" dir
+	// type toAdd = (fn: Function) => void;
+	await read('index.d.ts', 'utf8').then(str => {
+		return write(
+			join('priority', 'index.d.ts'),
+			str.replace(
+				`type toAdd = (fn: Function) => void;`,
+				`type toAdd = (fn: Function, isHigh?: boolean) => void;`,
+			)
+		);
+	});
 })().catch(err => {
 	console.error('ERROR:', err);
 	process.exit(1);
