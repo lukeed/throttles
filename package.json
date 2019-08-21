@@ -1,0 +1,33 @@
+{
+  "name": "throttles",
+  "version": "0.0.0",
+  "repository": "lukeed/throttles",
+  "description": "WIP",
+  "unpkg": "dist/throttles.min.js",
+  "module": "dist/throttles.m.js",
+  "main": "dist/throttles.js",
+  "types": "throttles.d.ts",
+  "license": "MIT",
+  "files": [
+    "*.d.ts",
+    "dist"
+  ],
+  "author": {
+    "name": "Luke Edwards",
+    "email": "luke.edwards05@gmail.com",
+    "url": "https://lukeed.com"
+  },
+  "engines": {
+    "node": ">=6"
+  },
+  "scripts": {
+    "build": "bundt",
+    "pretest": "npm run build",
+    "test": "tape test/*.js | tap-spec"
+  },
+  "devDependencies": {
+    "bundt": "0.4.0",
+    "tap-spec": "5.0.0",
+    "tape": "4.11.0"
+  }
+}
