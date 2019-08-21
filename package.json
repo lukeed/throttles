@@ -10,6 +10,7 @@
   "license": "MIT",
   "files": [
     "*.d.ts",
+    "priority",
     "dist"
   ],
   "author": {
