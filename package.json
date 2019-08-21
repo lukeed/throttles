@@ -3,10 +3,10 @@
   "version": "0.0.0",
   "repository": "lukeed/throttles",
   "description": "WIP",
-  "unpkg": "dist/throttles.min.js",
-  "module": "dist/throttles.m.js",
-  "main": "dist/throttles.js",
-  "types": "throttles.d.ts",
+  "unpkg": "dist/index.min.js",
+  "module": "dist/index.mjs",
+  "main": "dist/index.js",
+  "types": "index.d.ts",
   "license": "MIT",
   "files": [
     "*.d.ts",
@@ -21,12 +21,13 @@
     "node": ">=6"
   },
   "scripts": {
-    "build": "bundt",
+    "build": "node bin",
     "pretest": "npm run build",
     "test": "tape test/*.js | tap-spec"
   },
   "devDependencies": {
     "bundt": "0.4.0",
+    "premove": "1.0.0",
     "tap-spec": "5.0.0",
     "tape": "4.11.0"
   }
