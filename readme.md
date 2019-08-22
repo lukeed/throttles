@@ -34,24 +34,24 @@ Items within the "high priority" queue are handled before the low/general queue.
 
 ```js
 // import via npm module
-import throttle from 'throttles';
-import throttle from 'throttles/priority';
+import throttles from 'throttles';
+import throttles from 'throttles/priority';
 
 // import via unpkg
-import throttle from 'https://unpkg.com/throttles/index.mjs';
-import throttle from 'https://unpkg.com/throttles/priority/index.mjs';
+import throttles from 'https://unpkg.com/throttles/index.mjs';
+import throttles from 'https://unpkg.com/throttles/priority/index.mjs';
 ```
 
 ***Example Usage***
 
 ```js
-import throttle from 'throttles';
+import throttles from 'throttles';
 
 const API = 'https://pokeapi.co/api/v2/pokemon';
 const getPokemon = id => fetch(`${API}/${id}`).then(r => r.json());
 
 // Limit concurrency to 3
-const [toAdd, isDone] = throttle(3);
+const [toAdd, isDone] = throttles(3);
 
 // What we'll fetch
 const pokemon = ['bulbasaur', 'ivysaur', 'venusaur', 'charmander', 'charmeleon', 'charizard', ...];
@@ -73,7 +73,7 @@ pokemon.map(x => () => getPokemon(x).then(isDone)).forEach(toAdd);
 
 ## API
 
-### throttle(limit)
+### throttles(limit)
 Returns: `Array`
 
 Returns a tuple of [[`toAdd`](#toaddfn-ishigh), [`isDone`](#isdone)] actions.
@@ -95,7 +95,7 @@ Add a function to the throttle's queue.
 
 #### fn
 Type: `Function`<br>
-The function to add to the queue
+The function to add to the queue.
 
 #### isHigh
 Type: `Boolean`<br>
