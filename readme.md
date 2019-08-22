@@ -76,7 +76,7 @@ pokemon.map(x => () => getPokemon(x).then(isDone)).forEach(toAdd);
 ### throttle(limit)
 Returns: `Array`
 
-Returns a tuple of [[`toAdd`](#toAdd), [`isDone`](#isDone)] actions.
+Returns a tuple of [[`toAdd`](#toaddfn-ishigh), [`isDone`](#isdone)] actions.
 
 #### limit
 Type: `Number`<br>
