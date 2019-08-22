@@ -9,7 +9,6 @@ jobs:
     strategy:
       matrix:
         nodejs: [8, 10, 12]
-
     steps:
     - uses: actions/checkout@master
       with:
