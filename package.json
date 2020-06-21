@@ -9,10 +9,19 @@
   "types": "index.d.ts",
   "license": "MIT",
   "files": [
-    "*.d.ts",
+    "index.d.ts",
     "priority",
     "dist"
   ],
+  "modes": {
+    "default": "src/single.js",
+    "priority": "src/priority.js"
+  },
+  "scripts": {
+    "build": "bundt",
+    "test": "uvu -r esm test -i utils",
+    "postbuild": "cp priority.d.ts priority/index.d.ts"
+  },
   "author": {
     "name": "Luke Edwards",
     "email": "luke.edwards05@gmail.com",
@@ -21,15 +30,9 @@
   "engines": {
     "node": ">=6"
   },
-  "scripts": {
-    "build": "node bin",
-    "pretest": "npm run build",
-    "test": "tape -r esm test/*.js | tap-spec"
-  },
   "devDependencies": {
     "bundt": "1.0.1",
     "esm": "3.2.25",
-    "premove": "2.0.0",
     "uvu": "0.0.14"
   }
 }
