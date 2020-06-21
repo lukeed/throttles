@@ -1,26 +1,23 @@
-import test from 'tape';
-import throttle from '../src/single';
+import { test } from 'uvu';
+import * as assert from 'uvu/assert';
 import { sleep, inRange, timer } from './utils';
+import throttle from '../src/single';
 
-test('(single) exports', t => {
-	t.is(typeof throttle, 'function');
-	t.end();
+test('exports', () => {
+	assert.type(throttle, 'function');
 });
 
-test('(single) returns', t => {
+test('returns', () => {
 	const out = throttle();
-	t.true(Array.isArray(out), 'returns an Array');
-	t.is(out.length, 2, '~> has two items');
+	assert.ok(Array.isArray(out), 'returns an Array');
+	assert.is(out.length, 2, '~> has two items');
 
-	t.true(
-		out.every(x => typeof x === 'function'),
-		'~> both are functions'
-	);
-
-	t.end();
+	out.forEach(item => {
+		assert.type(item, 'function');
+	});
 });
 
-test('(single) usage :: default limit', async t => {
+test('usage :: default limit', async () => {
 	let last, num=5, step=500;
 	const [toAdd, isDone] = throttle();
 
@@ -32,12 +29,10 @@ test('(single) usage :: default limit', async t => {
 	await sleep(++num * step);
 
 	const bool = inRange(last, 2500);
-	t.true(bool, '~> ran 1 at a time');
-
-	t.end();
+	assert.ok(bool, '~> ran 1 at a time');
 });
 
-test('(single) usage :: custom limit', async t => {
+test('usage :: custom limit', async () => {
 	let last, num=10, step=500;
 	const [toAdd, isDone] = throttle(5);
 
@@ -49,7 +44,7 @@ test('(single) usage :: custom limit', async t => {
 	await sleep(++num * step);
 
 	const bool = inRange(last, 1000);
-	t.true(bool, '~> ran 5 at a time');
-
-	t.end();
+	assert.ok(bool, '~> ran 5 at a time');
 });
+
+test.run();

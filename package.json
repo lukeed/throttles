@@ -27,10 +27,9 @@
     "test": "tape -r esm test/*.js | tap-spec"
   },
   "devDependencies": {
-    "bundt": "0.4.0",
+    "bundt": "1.0.1",
     "esm": "3.2.25",
-    "premove": "1.0.0",
-    "tap-spec": "5.0.0",
-    "tape": "4.11.0"
+    "premove": "2.0.0",
+    "uvu": "0.0.14"
   }
 }

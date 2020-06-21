@@ -1,26 +1,23 @@
-import test from 'tape';
-import throttle from '../src/priority';
+import { test } from 'uvu';
+import * as assert from 'uvu/assert';
 import { sleep, inRange, timer } from './utils';
+import throttle from '../src/priority';
 
-test('(priority) exports', t => {
-	t.is(typeof throttle, 'function');
-	t.end();
+test('exports', () => {
+	assert.type(throttle, 'function');
 });
 
-test('(priority) returns', t => {
+test('returns', () => {
 	const out = throttle();
-	t.true(Array.isArray(out), 'returns an Array');
-	t.is(out.length, 2, '~> has two items');
+	assert.ok(Array.isArray(out), 'returns an Array');
+	assert.is(out.length, 2, '~> has two items');
 
-	t.true(
-		out.every(x => typeof x === 'function'),
-		'~> both are functions'
-	);
-
-	t.end();
+	out.forEach(item => {
+		assert.type(item, 'function');
+	});
 });
 
-test('(priority) usage :: discard repeats', async t => {
+test('usage :: discard repeats', async () => {
 	let last, num=5, step=500;
 	const [toAdd, isDone] = throttle();
 
@@ -32,12 +29,10 @@ test('(priority) usage :: discard repeats', async t => {
 	await sleep(++num * step);
 
 	const bool = inRange(last, 500);
-	t.true(bool, '~> ONLY RAN 1 ITEM');
-
-	t.end();
+	assert.ok(bool, '~> ONLY RAN 1 ITEM');
 });
 
-test('(priority) usage :: default limit', async t => {
+test('usage :: default limit', async () => {
 	let last, num=5, step=500;
 	const [toAdd, isDone] = throttle();
 
@@ -49,12 +44,11 @@ test('(priority) usage :: default limit', async t => {
 	await sleep(++num * step);
 
 	const bool = inRange(last, 2500);
-	t.true(bool, '~> ran 1 at a time');
+	assert.ok(bool, '~> ran 1 at a time');
 
-	t.end();
 });
 
-test('(priority) usage :: custom limit', async t => {
+test('usage :: custom limit', async () => {
 	let last, num=10, step=500;
 	const [toAdd, isDone] = throttle(5);
 
@@ -66,14 +60,11 @@ test('(priority) usage :: custom limit', async t => {
 	await sleep(++num * step);
 
 	const bool = inRange(last, 1000);
-	t.true(bool, '~> ran 5 at a time');
-
-	t.end();
+	assert.ok(bool, '~> ran 5 at a time');
 });
 
-test('(priority) isHigh :: init', async t => {
-	t.plan(5);
-
+test('isHigh :: init', async () => {
+	let plan = 0;
 	let last, low=0, num=3, step=500;
 	const [toAdd, isDone] = throttle(1);
 
@@ -83,9 +74,10 @@ test('(priority) isHigh :: init', async t => {
 	const isLow = () => sleep(step).then(toLow).then(isDone);
 
 	const isHigh = () => sleep(step).then(() => {
-		t.true(low <= 1, '~> high-priority item ran before low-priotity queue finished');
+		assert.ok(low <= 1, '~> high-priority item ran before low-priotity queue finished');
 		last = t1();
 		isDone();
+		plan++;
 	});
 
 	// Add 3 low-priority items first
@@ -99,15 +91,16 @@ test('(priority) isHigh :: init', async t => {
 	});
 
 	await sleep((2*num + 1) * step);
-	t.is(low, 3, '~> eventually ran all low-priority items');
+	assert.is(low, 3, '~> eventually ran all low-priority items');
 
 	const bool = inRange(last, 3000);
-	t.true(bool, '~> ran 1 at a time');
+	assert.ok(bool, '~> ran 1 at a time');
+
+	assert.is(plan, 3);
 });
 
-test('(priority) isHigh :: upgrade', async t => {
-	t.plan(9);
-
+test('isHigh :: upgrade', async () => {
+	let plan = 0;
 	let last, low=0, high=0, step=500;
 	const [toAdd, isDone] = throttle(1);
 
@@ -124,10 +117,11 @@ test('(priority) isHigh :: upgrade', async t => {
 		() => sleep(step).then(() => ccc=1).then(toLow).then(isDone),
 		() => sleep(step).then(() => ddd=1).then(toLow).then(isDone),
 		() => sleep(step).then(() => eee=1).then(() => {
-			t.true(low <= 1, '~> high-priority item ran before low-priotity queue finished');
+			assert.ok(low <= 1, '~> high-priority item ran before low-priotity queue finished');
 			last = t1();
 			isDone();
 			high++;
+			plan++;
 		})
 	];
 
@@ -139,23 +133,24 @@ test('(priority) isHigh :: upgrade', async t => {
 
 	await sleep(6 * step);
 
-	t.is(low, 4, '~> ran 4 items as low-priority');
-	t.is(high, 1, '~> ran 1 item as high-priority');
+	assert.is(low, 4, '~> ran 4 items as low-priority');
+	assert.is(high, 1, '~> ran 1 item as high-priority');
 
-	t.is(aaa, 1, '~> ran the "aaa" function');
-	t.is(bbb, 1, '~> ran the "bbb" function');
-	t.is(ccc, 1, '~> ran the "ccc" function');
-	t.is(ddd, 1, '~> ran the "ddd" function');
-	t.is(eee, 1, '~> ran the "eee" function');
+	assert.is(aaa, 1, '~> ran the "aaa" function');
+	assert.is(bbb, 1, '~> ran the "bbb" function');
+	assert.is(ccc, 1, '~> ran the "ccc" function');
+	assert.is(ddd, 1, '~> ran the "ddd" function');
+	assert.is(eee, 1, '~> ran the "eee" function');
 
 	const bool = inRange(last, 2500);
-	t.true(bool, '~> ran 1 at a time');
+	assert.ok(bool, '~> ran 1 at a time');
+
+	assert.is(plan, 1);
 });
 
 
-test('(priority) isHigh :: but unseen!', async t => {
-	t.plan(8);
-
+test('isHigh :: but unseen!', async () => {
+	let plan = 0;
 	let last, low=0, high=0, step=500;
 	const [toAdd, isDone] = throttle(1);
 
@@ -174,10 +169,11 @@ test('(priority) isHigh :: but unseen!', async t => {
 
 	const custom = () => {
 		return sleep(step).then(() => ddd=1).then(() => {
-			t.true(low <= 1, '~> high-priority item ran before low-priotity queue finished');
+			assert.ok(low <= 1, '~> high-priority item ran before low-priotity queue finished');
 			last = t1();
 			isDone();
 			high++;
+			plan++;
 		});
 	};
 
@@ -192,14 +188,18 @@ test('(priority) isHigh :: but unseen!', async t => {
 
 	await sleep(5 * step);
 
-	t.is(low, 3, '~> ran 3 items as low-priority');
-	t.is(high, 1, '~> ran 1 item as high-priority');
+	assert.is(low, 3, '~> ran 3 items as low-priority');
+	assert.is(high, 1, '~> ran 1 item as high-priority');
 
-	t.is(aaa, 1, '~> ran the "aaa" function');
-	t.is(bbb, 1, '~> ran the "bbb" function');
-	t.is(ccc, 1, '~> ran the "ccc" function');
-	t.is(ddd, 1, '~> ran the "ddd" function');
+	assert.is(aaa, 1, '~> ran the "aaa" function');
+	assert.is(bbb, 1, '~> ran the "bbb" function');
+	assert.is(ccc, 1, '~> ran the "ccc" function');
+	assert.is(ddd, 1, '~> ran the "ddd" function');
 
 	const bool = inRange(last, 2000);
-	t.true(bool, '~> ran 1 at a time');
+	assert.ok(bool, '~> ran 1 at a time');
+
+	assert.is(plan, 1);
 });
+
+test.run();
