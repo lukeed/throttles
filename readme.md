@@ -1,4 +1,4 @@
-# throttles [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/throttles)](https://codecov.io/gh/lukeed/throttles)
+# throttles [![build status](https://badgen.now.sh/github/status/lukeed/throttles)](https://github.com/lukeed/throttles/actions) [![codecov](https://badgen.now.sh/codecov/c/github/lukeed/throttles)](https://codecov.io/gh/lukeed/throttles)
 
 > A tiny (139B to 204B) utility to regulate the execution rate of your functions
 
