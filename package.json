@@ -19,6 +19,7 @@
   },
   "scripts": {
     "build": "bundt",
+    "pretest": "npm run build",
     "test": "uvu -r esm test -i utils",
     "postbuild": "cp priority.d.ts priority/index.d.ts"
   },
